@@ -1,1 +1,1 @@
-# Etch-a-sketch-Odin
+A pretty neat Etch-A-Sketch for the Odin Project
