@@ -26,7 +26,10 @@ function makeRows(rows, cols) {
 }
 
 function cellColor(e) {
-    console.log(e);
+    if (e.type === 'mouseover' && !mouseDown) return;
+    
+    const gridItem = e.target;
+
     gridItem.setAttribute('style', 'background: black');
 }
 
@@ -34,10 +37,13 @@ function cellColor(e) {
 
 const container = document.querySelector('.container');
 
-makeRows(16, 16)
+makeRows(64, 64);
 
-const gridItems = document.querySelectorAll('.grid-item')
-const gridItem = document.querySelector('.grid-item');
+const gridItems = document.querySelectorAll('.grid-item');
+gridItems.forEach(gridItem => gridItem.addEventListener('mouseover', cellColor));
 
-gridItems.forEach(gridItem => gridItem.addEventListener('click', cellColor));
+let mouseDown = false;
+document.body.onmousedown = () => (mouseDown = true);
+document.body.onmouseup = () => (mouseDown = false);
+
 
