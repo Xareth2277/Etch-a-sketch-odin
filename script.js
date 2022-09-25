@@ -17,6 +17,10 @@
 const container = document.querySelector('.container');
 const gridSize = document.getElementById("gridSize");
 const sliderValue = document.getElementById('sliderValue');
+const colorMode = document.getElementById('btnColor');
+const rainbowMode = document.getElementById('btnRainbow');
+const eraser = document.getElementById('btnEraser');
+const clear = document.getElementById('btnClear');
 
 // ==========================================================================
 // Functions
@@ -33,17 +37,6 @@ function makeRows(rows, cols) {
     };
 };
 
-function cellColor(e) {
-    if (e.type === 'mouseover' && !mouseDown) return;
-    const gridItem = e.target;
-    gridItem.setAttribute('style', `background: ${pickColor()}`);
-};
-
-function pickColor() {
-    const colorPick = document.getElementById("colorpicker").value;
-    return colorPick;
-};
-
 function gridSetup() {
     sliderValue.innerHTML = `Grid Size: ${gridSize.value}x${gridSize.value}`;
     makeRows(gridSize.value, gridSize.value);
@@ -55,21 +48,65 @@ function gridSetup() {
     ));
 };
 
-// ==========================================================================
+function cellColor(e) {
+    if (e.type === 'mouseover' && !mouseDown) return;
+    const gridItem = e.target;
+    gridItem.setAttribute('style', `background: ${pickColor()}`);
+};
 
+function pickColor() {
+    if (drawingMode === "colorMode") {
+        const colorPick = document.getElementById("colorpicker").value;
+        return colorPick;
+    } else if (drawingMode === "rainbowMode") {
+        return rainbowColor();
+    }
+};
+
+function rainbowColor() {
+    let r = Math.floor(Math.random() * 255);
+    let g = Math.floor(Math.random() * 255);
+    let b = Math.floor(Math.random() * 255);
+    return `rgb(${r}, ${g}, ${b})`;
+};
+
+function changeMode(e) {
+
+    console.log(e.target.id);
+
+    if (e.target.id === "btnColor") {
+        drawingMode = "colorMode";
+    } else if (e.target.id === "btnRainbow") {
+        drawingMode = "rainbowMode";
+    } else if (e.target.id === "btnEraser") {
+        drawingMode = "eraser";
+    };
+};
+
+// ==========================================================================
+// Input
+// ==========================================================================
 
 gridSize.oninput = gridSetup;
 
-
-// gridSetup();
-
-
-
+// This allows to draw with mouse held down
 let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
 
+// ==========================================================================
+// Drawing Modes
+// ==========================================================================
 
+let drawingMode = "colorMode";
+
+colorMode.addEventListener("click", changeMode);
+rainbowMode.addEventListener("click", changeMode);
+eraser.addEventListener("click", changeMode);
+// clear.addEventListener("click", changeMode);
+
+// ==========================================================================
+// Page loaded
 // ==========================================================================
 
 // Call the gridSetup() when the page is loaded 
