@@ -11,6 +11,14 @@
 // - Eraser / Button to reset the grid
 
 // ==========================================================================
+// DOM References
+// ==========================================================================
+
+const container = document.querySelector('.container');
+const gridSize = document.getElementById("gridSize");
+const sliderValue = document.getElementById('sliderValue');
+
+// ==========================================================================
 // Functions
 // ==========================================================================
 
@@ -34,21 +42,37 @@ function cellColor(e) {
 function pickColor() {
     const colorPick = document.getElementById("colorpicker").value;
     return colorPick;
-}
+};
+
+function gridSetup() {
+    sliderValue.innerHTML = `Grid Size: ${gridSize.value}x${gridSize.value}`;
+    makeRows(gridSize.value, gridSize.value);
+
+    const gridItems = document.querySelectorAll('.grid-item');
+    gridItems.forEach(gridItem => gridItem.addEventListener(
+        'mouseover', 
+        cellColor
+    ));
+};
 
 // ==========================================================================
 
-const container = document.querySelector('.container');
 
-makeRows(64, 64);
+gridSize.oninput = gridSetup;
 
-const gridItems = document.querySelectorAll('.grid-item');
-gridItems.forEach(gridItem => gridItem.addEventListener('mouseover', cellColor));
+
+// gridSetup();
+
+
 
 let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
 
 
+// ==========================================================================
 
-
+// Call the gridSetup() when the page is loaded 
+document.addEventListener('readystatechange', () => {
+    if (document.readyState == 'complete') gridSetup();
+});
