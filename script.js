@@ -22,15 +22,18 @@ function makeRows(rows, cols) {
         let cell = document.createElement('div');
         cell.setAttribute('id', c);
         container.appendChild(cell).className = "grid-item";
-    }
-}
+    };
+};
 
 function cellColor(e) {
     if (e.type === 'mouseover' && !mouseDown) return;
-    
     const gridItem = e.target;
+    gridItem.setAttribute('style', `background: ${pickColor()}`);
+};
 
-    gridItem.setAttribute('style', 'background: black');
+function pickColor() {
+    const colorPick = document.getElementById("colorpicker").value;
+    return colorPick;
 }
 
 // ==========================================================================
@@ -45,5 +48,7 @@ gridItems.forEach(gridItem => gridItem.addEventListener('mouseover', cellColor))
 let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
+
+
 
 
