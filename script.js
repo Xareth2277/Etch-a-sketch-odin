@@ -11,6 +11,16 @@
 // - Eraser / Button to reset the grid
 
 // ==========================================================================
+// TOC
+// ==========================================================================
+
+// - DOM References
+// - Functions
+// - Input
+// - Drawing Modes
+// - Page Loaded
+
+// ==========================================================================
 // DOM References
 // ==========================================================================
 
@@ -26,32 +36,26 @@ const clear = document.getElementById('btnClear');
 // Functions
 // ==========================================================================
 
-function makeRows(rows, cols) {
-    container.style.setProperty('--grid-rows', rows);
-    container.style.setProperty('--grid-cols', cols);
+function gridSetup() {
+    sliderValue.innerHTML = `Grid Size: ${gridSize.value}x${gridSize.value}`;
 
-    for (c = 1; c <= (rows * cols); c++) {
+    container.style.setProperty('--grid-rows', gridSize.value);
+    container.style.setProperty('--grid-cols', gridSize.value);
+
+    // clears the grid //
+    container.innerHTML = '';
+
+    for (c = 1; c <= (gridSize.value * gridSize.value); c++) {
         let cell = document.createElement('div');
         cell.setAttribute('id', c);
+        cell.addEventListener('mouseover', cellColor);
         container.appendChild(cell).className = "grid-item";
     };
 };
 
-function gridSetup() {
-    sliderValue.innerHTML = `Grid Size: ${gridSize.value}x${gridSize.value}`;
-    makeRows(gridSize.value, gridSize.value);
-
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach(gridItem => gridItem.addEventListener(
-        'mouseover', 
-        cellColor
-    ));
-};
-
 function cellColor(e) {
     if (e.type === 'mouseover' && !mouseDown) return;
-    const gridItem = e.target;
-    gridItem.setAttribute('style', `background: ${pickColor()}`);
+    e.target.style.backgroundColor = pickColor();
 };
 
 function pickColor() {
@@ -60,6 +64,8 @@ function pickColor() {
         return colorPick;
     } else if (drawingMode === "rainbowMode") {
         return rainbowColor();
+    } else if (drawingMode === "eraser") {
+        return "white";
     }
 };
 
@@ -71,9 +77,6 @@ function rainbowColor() {
 };
 
 function changeMode(e) {
-
-    console.log(e.target.id);
-
     if (e.target.id === "btnColor") {
         drawingMode = "colorMode";
     } else if (e.target.id === "btnRainbow") {
@@ -103,10 +106,10 @@ let drawingMode = "colorMode";
 colorMode.addEventListener("click", changeMode);
 rainbowMode.addEventListener("click", changeMode);
 eraser.addEventListener("click", changeMode);
-// clear.addEventListener("click", changeMode);
+clear.addEventListener("click", gridSetup);
 
 // ==========================================================================
-// Page loaded
+// Page Loaded
 // ==========================================================================
 
 // Call the gridSetup() when the page is loaded 
